@@ -27,13 +27,18 @@ func parseClassIdentifier(packet *dhcpv4.DHCPv4) (*VendorData, error) {
 	// Arista;DCS-7050S-64;01.23;JPE12221671
 	case strings.HasPrefix(vc, "Arista;"):
 		p := strings.Split(vc, ";")
-		if len(p) < 4 {
+		if len(p) < 3 {
 			return nil, errVendorOptionMalformed
 		}
 
 		vd.VendorName = p[0]
 		vd.Model = p[1]
-		vd.Serial = p[3]
+		// Handle vEOS
+		if len(p) < 3 {
+			vd.Serial = p[2]
+		} else {
+			vd.Serial = p[3]
+		}
 		return vd, nil
 
 	// ZPESystems:NSC:002251623

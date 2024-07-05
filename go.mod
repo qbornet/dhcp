@@ -1,4 +1,4 @@
-module github.com/insomniacslk/dhcp
+module github.com/qbornet/dhcp
 
 go 1.20
 
@@ -24,3 +24,5 @@ require (
 	golang.org/x/sync v0.3.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0 // indirect
 )
+
+replace github.com/insomniacslk/dhcp => github.com/qbornet/dhcp v0.0.1
