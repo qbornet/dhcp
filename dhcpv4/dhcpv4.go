@@ -24,8 +24,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/insomniacslk/dhcp/iana"
-	"github.com/insomniacslk/dhcp/rfc1035label"
+	"github.com/qbornet/dhcp/iana"
+	"github.com/qbornet/dhcp/rfc1035label"
 	"github.com/u-root/uio/rand"
 	"github.com/u-root/uio/uio"
 )

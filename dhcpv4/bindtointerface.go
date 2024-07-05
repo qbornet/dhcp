@@ -1,7 +1,7 @@
 package dhcpv4
 
 import (
-	"github.com/insomniacslk/dhcp/interfaces"
+	"github.com/qbornet/dhcp/interfaces"
 )
 
 // BindToInterface (deprecated) redirects to interfaces.BindToInterface

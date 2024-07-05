@@ -5,7 +5,7 @@ import(
 	"os"
 	"testing"
 
-	"github.com/insomniacslk/dhcp/dhcpv6"
+	"github.com/qbornet/dhcp/dhcpv6"
 	"github.com/stretchr/testify/require"
 )
 

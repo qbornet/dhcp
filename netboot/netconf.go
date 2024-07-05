@@ -9,8 +9,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/insomniacslk/dhcp/dhcpv4"
-	"github.com/insomniacslk/dhcp/dhcpv6"
+	"github.com/qbornet/dhcp/dhcpv4"
+	"github.com/qbornet/dhcp/dhcpv6"
 	"github.com/jsimonetti/rtnetlink"
 	"github.com/jsimonetti/rtnetlink/rtnl"
 	"github.com/mdlayher/netlink"

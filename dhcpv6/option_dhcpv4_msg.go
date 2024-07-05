@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/insomniacslk/dhcp/dhcpv4"
+	"github.com/qbornet/dhcp/dhcpv4"
 )
 
 // OptDHCPv4Msg represents a OptionDHCPv4Msg option

@@ -5,8 +5,8 @@ import (
 	"net"
 	"testing"
 
-	"github.com/insomniacslk/dhcp/dhcpv4"
-	"github.com/insomniacslk/dhcp/iana"
+	"github.com/qbornet/dhcp/dhcpv4"
+	"github.com/qbornet/dhcp/iana"
 	"github.com/stretchr/testify/require"
 )
 
