@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/google/go-cmp v0.5.9
 	github.com/hugelgupf/socketpair v0.0.0-20190730060125-05d35a94e714
+	github.com/insomniacslk/dhcp v0.0.0-00010101000000-000000000000
 	github.com/jsimonetti/rtnetlink v1.3.5
 	github.com/mdlayher/netlink v1.7.2
 	github.com/mdlayher/packet v1.1.2
@@ -25,4 +26,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.0 // indirect
 )
 
-replace github.com/insomniacslk/dhcp => github.com/qbornet/dhcp v0.0.1
+replace github.com/insomniacslk/dhcp v0.0.0-00010101000000-000000000000 => github.com/qbornet/dhcp v0.0.1
