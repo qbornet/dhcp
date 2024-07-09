@@ -1,10 +1,10 @@
 // Package server4 is a basic, extensible DHCPv4 server.
 //
 // To use the DHCPv4 server code you have to call NewServer with two arguments:
-//  - an interface to listen on,
-//  - an address to listen on, and
-//  - a handler function, that will be called every time a valid DHCPv4 packet is
-//    received.
+//   - an interface to listen on,
+//   - an address to listen on, and
+//   - a handler function, that will be called every time a valid DHCPv4 packet is
+//     received.
 //
 // The address to listen on is used to know IP address, port and optionally the
 // scope to create and UDP socket to listen on for DHCPv4 traffic.
@@ -49,7 +49,6 @@
 //		// goroutine.
 //		server.Serve()
 //	}
-//
 package server4
 
 import (
@@ -72,7 +71,7 @@ type Server struct {
 }
 
 // Serve serves requests.
-func (s *Server) Serve() error {
+func (s *Server) Serve(errHandler *error) error {
 	s.logger.Printf("Server listening on %s", s.conn.LocalAddr())
 	s.logger.Printf("Ready to handle requests")
 
@@ -105,7 +104,11 @@ func (s *Server) Serve() error {
 			}
 		}
 		go s.Handler(s.conn, upeer, m)
+		if *errHandler != nil {
+			break
+		}
 	}
+	return nil
 }
 
 // Close sends a termination request to the server, and closes the UDP listener.
