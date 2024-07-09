@@ -34,7 +34,7 @@ func parseClassIdentifier(packet *dhcpv4.DHCPv4) (*VendorData, error) {
 		vd.VendorName = p[0]
 		vd.Model = p[1]
 		// Handle vEOS
-		if len(p) < 3 {
+		if len(p) == 3 {
 			vd.Serial = p[2]
 		} else {
 			vd.Serial = p[3]
