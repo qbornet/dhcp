@@ -71,44 +71,49 @@ type Server struct {
 }
 
 // Serve serves requests.
-func (s *Server) Serve(errHandler *error) error {
+func (s *Server) Serve(errHandler *error, finished *chan bool) error {
 	s.logger.Printf("Server listening on %s", s.conn.LocalAddr())
 	s.logger.Printf("Ready to handle requests")
 
 	defer s.Close()
 	for {
-		rbuf := make([]byte, 4096) // FIXME this is bad
-		n, peer, err := s.conn.ReadFrom(rbuf)
-		if err != nil {
-			s.logger.Printf("Error reading from packet conn: %v", err)
-			return err
-		}
-		s.logger.Printf("Handling request from %v", peer)
+		select {
+		case <-*finished:
+			// exit gracefully
+			return nil
+		default:
+			rbuf := make([]byte, 4096) // FIXME this is bad
+			n, peer, err := s.conn.ReadFrom(rbuf)
+			if err != nil {
+				s.logger.Printf("Error reading from packet conn: %v", err)
+				return err
+			}
+			s.logger.Printf("Handling request from %v", peer)
 
-		m, err := dhcpv4.FromBytes(rbuf[:n])
-		if err != nil {
-			s.logger.Printf("Error parsing DHCPv4 request: %v", err)
-			continue
-		}
+			m, err := dhcpv4.FromBytes(rbuf[:n])
+			if err != nil {
+				s.logger.Printf("Error parsing DHCPv4 request: %v", err)
+				continue
+			}
 
-		upeer, ok := peer.(*net.UDPAddr)
-		if !ok {
-			s.logger.Printf("Not a UDP connection? Peer is %s", peer)
-			continue
-		}
-		// Set peer to broadcast if the client did not have an IP.
-		if upeer.IP == nil || upeer.IP.To4().Equal(net.IPv4zero) {
-			upeer = &net.UDPAddr{
-				IP:   net.IPv4bcast,
-				Port: upeer.Port,
+			upeer, ok := peer.(*net.UDPAddr)
+			if !ok {
+				s.logger.Printf("Not a UDP connection? Peer is %s", peer)
+				continue
+			}
+			// Set peer to broadcast if the client did not have an IP.
+			if upeer.IP == nil || upeer.IP.To4().Equal(net.IPv4zero) {
+				upeer = &net.UDPAddr{
+					IP:   net.IPv4bcast,
+					Port: upeer.Port,
+				}
+			}
+			go s.Handler(s.conn, upeer, m)
+			if *errHandler != nil {
+				return *errHandler
 			}
 		}
-		go s.Handler(s.conn, upeer, m)
-		if *errHandler != nil {
-			break
-		}
 	}
-	return nil
 }
 
 // Close sends a termination request to the server, and closes the UDP listener.
