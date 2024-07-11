@@ -72,46 +72,50 @@ type Server struct {
 
 // Serve serves requests.
 func (s *Server) Serve(errHandler *error, finished *chan bool) error {
-	s.logger.Printf("Server listening on %s", s.conn.LocalAddr())
-	s.logger.Printf("Ready to handle requests")
+	s.logger.Printf("Server listening on %s\n", s.conn.LocalAddr())
+	s.logger.Printf("Ready to handle requests\n")
 
 	defer s.Close()
 	for {
 		select {
 		case <-*finished:
-			// exit gracefully
+			s.logger.Printf("Exiting server gracefully\n")
 			return nil
 		default:
 			rbuf := make([]byte, 4096) // FIXME this is bad
 			n, peer, err := s.conn.ReadFrom(rbuf)
 			if err != nil {
-				s.logger.Printf("Error reading from packet conn: %v", err)
+				s.logger.Printf("Error reading from packet conn: %v\n", err)
 				return err
 			}
-			s.logger.Printf("Handling request from %v", peer)
+			s.logger.Printf("Handling request from %v\n", peer)
 
 			m, err := dhcpv4.FromBytes(rbuf[:n])
 			if err != nil {
-				s.logger.Printf("Error parsing DHCPv4 request: %v", err)
+				s.logger.Printf("Error parsing DHCPv4 request: %v\n", err)
 				continue
 			}
 
 			upeer, ok := peer.(*net.UDPAddr)
 			if !ok {
-				s.logger.Printf("Not a UDP connection? Peer is %s", peer)
+				s.logger.Printf("Not a UDP connection? Peer is %s\n", peer)
 				continue
 			}
 			// Set peer to broadcast if the client did not have an IP.
 			if upeer.IP == nil || upeer.IP.To4().Equal(net.IPv4zero) {
+				s.logger.Printf("Set ip to broadcast\n")
 				upeer = &net.UDPAddr{
 					IP:   net.IPv4bcast,
 					Port: upeer.Port,
 				}
 			}
+			s.logger.Printf("Calling handler\n")
 			go s.Handler(s.conn, upeer, m)
 			if *errHandler != nil {
+				s.logger.Printf("Error received from errHandler: %v\n", *errHandler)
 				return *errHandler
 			}
+			s.logger.Printf("Reading new packet\n")
 		}
 	}
 }
