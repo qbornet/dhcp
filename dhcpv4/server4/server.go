@@ -61,7 +61,7 @@ import (
 
 // Handler is a type that defines the handler function to be called every time a
 // valid DHCPv4 message is received
-type Handler func(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4)
+type Handler func(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4, finished *chan bool)
 
 // Server represents a DHCPv4 server object
 type Server struct {
@@ -110,7 +110,7 @@ func (s *Server) Serve(errHandler *error, finished *chan bool) error {
 				}
 			}
 			s.logger.Printf("Calling handler\n")
-			go s.Handler(s.conn, upeer, m)
+			go s.Handler(s.conn, upeer, m, finished)
 			if *errHandler != nil {
 				s.logger.Printf("Error received from errHandler: %v\n", *errHandler)
 				return *errHandler
